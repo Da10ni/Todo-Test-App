@@ -3,6 +3,7 @@ import { useState } from 'react'
 function App() {
   const [todos, setTodos] = useState([])
   const [input, setInput] = useState('')
+  const [filter, setFilter] = useState('all')
 
   const addTodo = (e) => {
     e.preventDefault()
@@ -21,6 +22,12 @@ function App() {
   }
 
   const remaining = todos.filter((t) => !t.completed).length
+
+  const filteredTodos = todos.filter((t) => {
+    if (filter === 'active') return !t.completed
+    if (filter === 'completed') return t.completed
+    return true
+  })
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-start justify-center pt-16 px-4">
@@ -45,8 +52,24 @@ function App() {
 
         {todos.length > 0 && (
           <>
+            <div className="flex gap-1 mb-4">
+              {['all', 'active', 'completed'].map((f) => (
+                <button
+                  key={f}
+                  onClick={() => setFilter(f)}
+                  className={`px-3 py-1 text-sm rounded-md font-medium transition-colors ${
+                    filter === f
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-100'
+                  }`}
+                >
+                  {f.charAt(0).toUpperCase() + f.slice(1)}
+                </button>
+              ))}
+            </div>
+
             <ul className="space-y-2 mb-4">
-              {todos.map((todo) => (
+              {filteredTodos.map((todo) => (
                 <li
                   key={todo.id}
                   className="flex items-center gap-3 px-4 py-3 bg-white rounded-lg border border-gray-200 group"
