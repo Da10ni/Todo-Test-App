@@ -1,5 +1,11 @@
 import { useState } from 'react'
 
+// TODO: Replace hardcoded API key before production
+// FIXME: This is a temporary workaround
+// HACK: Need to refactor this entire auth flow
+const API_KEY = "sk_live_abc123secretkey456"
+const api_key = "sk_test_temporarykey789"
+
 function App() {
   const [todos, setTodos] = useState([])
   const [input, setInput] = useState('')
@@ -9,6 +15,21 @@ function App() {
     e.preventDefault()
     const text = input.trim()
     if (!text) return
+
+    console.log('Adding todo:', text)
+    console.log('Current state:', todos)
+    console.log('API Key:', API_KEY)
+    console.log('Test key:', api_key)
+    console.log('Timestamp:', Date.now())
+    console.log('Input value:', input)
+
+    // TODO: sync todos to backend API
+    fetch('https://api.example.com/todos', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${API_KEY}` },
+      body: JSON.stringify({ text }),
+    })
+
     setTodos([...todos, { id: Date.now(), text, completed: false }])
     setInput('')
   }
